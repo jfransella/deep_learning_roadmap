@@ -36,5 +36,5 @@ accuracy = np.mean(predictions == y_test)
 print(f"[Main] Final accuracy on test set: {accuracy * 100:.2f}%")
 
 plot_learning_curve(perceptron)
-plot_confusion_matrix(y_test, predictions)
+plot_confusion_matrix(y_test, predictions, display_labels=['Class 0', 'Class 1'])
 plot_decision_boundary(X_train, y_train, perceptron, title="Perceptron Failing on Concentric Circles")

@@ -46,9 +46,9 @@ print(f"[Main] --> Accuracy on the test set: {accuracy * 100:.2f}%")
 # 5. Results Visualization
 print("\n[Main] Step 5: Generating visualizations of the results...")
 plot_learning_curve(perceptron)
-plot_confusion_matrix(y_test, predictions)
+plot_confusion_matrix(y_test, predictions, display_labels=['Digit 0', 'Digit 1'])
 plot_learned_weights(perceptron)
-plot_misclassified_examples(X_test, y_test, predictions)
+plot_misclassified_examples(X_test, y_test, predictions, display_labels=['0', '1'])
 animate_learned_weights(perceptron, output_filename="perceptron_weights_evolution.gif")
 
 print("\n[Main] --- Project 01 Complete ---")

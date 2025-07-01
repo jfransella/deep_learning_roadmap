@@ -5,15 +5,27 @@ Visualization utilities for perceptron training and evaluation.
 Part of a project to explore the history and advances in neural network AI.
 """
 
+from typing import List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.animation as animation
 
-def plot_decision_boundary(X, y, model, title=""):
+def plot_decision_boundary(X: np.ndarray, y: np.ndarray, model: 'Perceptron', title: str = "") -> None:
     """
     Plot the decision boundary for a 2D dataset and the model's evolution.
     Only for 2D data (e.g., OR gate).
+
+    Parameters
+    ----------
+    X : np.ndarray
+        Input features (must be 2D).
+    y : np.ndarray
+        Target labels.
+    model : 'Perceptron'
+        The trained Perceptron model instance. It must have a `weights_history`.
+    title : str, optional
+        Title for the plot.
     """
     fig = plt.figure()
     plt.title(title)
@@ -35,10 +47,15 @@ def plot_decision_boundary(X, y, model, title=""):
     plt.grid(True)
     plt.show()
 
-def plot_learned_weights(model):
+def plot_learned_weights(model: 'Perceptron') -> None:
     """
     Visualize the learned weights of the Perceptron as an image.
     The number of weights must be a perfect square (e.g., 784 -> 28x28).
+
+    Parameters
+    ----------
+    model : 'Perceptron'
+        The trained Perceptron model instance.
     """
     image_size = int(np.sqrt(model.weights.shape[0]))
     weights_image = model.weights.reshape(image_size, image_size)
@@ -48,7 +65,13 @@ def plot_learned_weights(model):
     plt.colorbar(label="Weight Strength")
     plt.show()
 
-def plot_misclassified_examples(X_test, y_test, predictions, n=10):
+def plot_misclassified_examples(
+    X_test: np.ndarray,
+    y_test: np.ndarray,
+    predictions: np.ndarray,
+    n: int = 10,
+    display_labels: Optional[List[str]] = None
+) -> None:
     """
     Plot a sample of misclassified images.
 
@@ -62,6 +85,9 @@ def plot_misclassified_examples(X_test, y_test, predictions, n=10):
         Model predictions on the test data.
     n : int, optional
         Number of misclassified examples to show (default=10).
+    display_labels : list of str, optional
+        List of class names to display instead of integer labels.
+        e.g., ['Digit 6', 'Digit 9'].
     """
     misclassified_mask = (predictions != y_test)
     X_misclassified = X_test[misclassified_mask]
@@ -80,16 +106,29 @@ def plot_misclassified_examples(X_test, y_test, predictions, n=10):
     for i, ax in enumerate(axes):
         idx = sample_indices[i]
         image = X_misclassified[idx].reshape(image_size, image_size)
-        true_label = y_misclassified_true[idx]
-        pred_label = y_misclassified_pred[idx]
+        true_label_int = y_misclassified_true[idx]
+        pred_label_int = y_misclassified_pred[idx]
+
+        if display_labels:
+            true_label_str = display_labels[true_label_int]
+            pred_label_str = display_labels[pred_label_int]
+        else:
+            true_label_str = true_label_int
+            pred_label_str = pred_label_int
+
         ax.imshow(image, cmap='gray')
-        ax.set_title(f"True: {true_label}\nPred: {pred_label}")
+        ax.set_title(f"True: {true_label_str}\nPred: {pred_label_str}")
         ax.axis('off')
     plt.show()
 
-def plot_learning_curve(model):
+def plot_learning_curve(model: 'Perceptron') -> None:
     """
     Plot the number of misclassifications per epoch (learning curve).
+
+    Parameters
+    ----------
+    model : 'Perceptron'
+        The trained Perceptron model instance. It must have an `errors_history`.
     """
     plt.figure()
     plt.plot(range(1, len(model.errors_history) + 1), model.errors_history, marker='o')
@@ -99,21 +138,37 @@ def plot_learning_curve(model):
     plt.grid(True)
     plt.show()
 
-def plot_confusion_matrix(y_true, y_pred):
+def plot_confusion_matrix(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    display_labels: Optional[List[str]] = None
+) -> None:
     """
     Plot a confusion matrix using the true labels and model predictions.
+
+    Parameters
+    ----------
+    y_true : array-like
+        True labels.
+    y_pred : array-like
+        Model's predicted labels.
+    display_labels : list of str, optional
+        Labels for the matrix axes. If None, uses unique labels from y_true/y_pred.
     """
     ConfusionMatrixDisplay.from_predictions(
         y_true,
         y_pred,
-        display_labels=['Digit 0', 'Digit 1'],
+        display_labels=display_labels,
         cmap='Blues',
         normalize=None
     )
     plt.title('Confusion Matrix')
     plt.show()
 
-def animate_learned_weights(model, output_filename="perceptron_weights.gif"):
+def animate_learned_weights(
+    model: 'Perceptron',
+    output_filename: str = "perceptron_weights.gif"
+) -> None:
     """
     Create and save an animation of the learned weights over epochs.
 
@@ -143,7 +198,12 @@ def animate_learned_weights(model, output_filename="perceptron_weights.gif"):
     print("Animation saved.")
     plt.close()
 
-def animate_dataset_samples(X, y, n_samples=50, output_filename="dataset_sample.gif"):
+def animate_dataset_samples(
+    X: np.ndarray,
+    y: np.ndarray,
+    n_samples: int = 50,
+    output_filename: str = "dataset_sample.gif"
+) -> None:
     """
     Create and save an animation flashing random samples from a dataset.
 
@@ -178,7 +238,12 @@ def animate_dataset_samples(X, y, n_samples=50, output_filename="dataset_sample.
     print("Animation saved.")
     plt.close()
 
-def animate_scatter_reveal(X, y, n_frames=200, output_filename="scatter_reveal.gif"):
+def animate_scatter_reveal(
+    X: np.ndarray,
+    y: np.ndarray,
+    n_frames: int = 200,
+    output_filename: str = "scatter_reveal.gif"
+) -> None:
     """
     Create an animation that sequentially reveals points in a scatter plot.
 

@@ -45,6 +45,6 @@ print(f"[Main] --> Accuracy on the '6' vs '9' test set: {accuracy * 100:.2f}%")
 # 5. Visualize the training results
 print("\n[Main] Step 5: Generating visualizations...")
 plot_learning_curve(perceptron)
-plot_confusion_matrix(y_test, predictions)
+plot_confusion_matrix(y_test, predictions, display_labels=['Digit 6', 'Digit 9'])
 plot_learned_weights(perceptron)
-plot_misclassified_examples(X_test, y_test, predictions)
+plot_misclassified_examples(X_test, y_test, predictions, display_labels=['6', '9'])
