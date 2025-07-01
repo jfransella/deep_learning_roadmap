@@ -5,6 +5,7 @@ Train and evaluate the Perceptron on a concentric circles dataset (a non-linearl
 Part of a project to explore the history and advances in neural network AI.
 """
 
+import os
 from sklearn.datasets import make_circles
 from src.experiment_runner import run_experiment
 from src.visualize import (
@@ -19,6 +20,11 @@ def load_circles_data():
     return make_circles(n_samples=200, noise=0.05, factor=0.5, random_state=1)
 
 if __name__ == "__main__":
+    # Define output directory and experiment prefix
+    OUTPUT_DIR = "output"
+    EXPERIMENT_PREFIX = "circles"
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
     # 1. Run the experiment
     perceptron, X_train, y_train, X_test, y_test, predictions = run_experiment(
         data_loader_func=load_circles_data,
@@ -33,9 +39,21 @@ if __name__ == "__main__":
     print("\n[Main] Generating visualizations for the 'Circles' experiment...")
 
     # Input data visualization
-    animate_scatter_reveal(X_train, y_train, output_filename="circles_data_reveal.gif")
+    animate_scatter_reveal(
+        X_train, y_train,
+        output_filename=os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}_data_reveal.gif")
+    )
 
     # Result visualizations
-    plot_learning_curve(perceptron)
-    plot_confusion_matrix(y_test, predictions, display_labels=['Class 0', 'Class 1'])
-    plot_decision_boundary(X_train, y_train, perceptron, title="Perceptron Failing on Concentric Circles")
+    plot_learning_curve(
+        perceptron,
+        output_filename=os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}_learning_curve.png")
+    )
+    plot_confusion_matrix(
+        y_test, predictions, display_labels=['Class 0', 'Class 1'],
+        output_filename=os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}_confusion_matrix.png")
+    )
+    plot_decision_boundary(
+        X_train, y_train, perceptron, title="Perceptron Failing on Concentric Circles",
+        output_filename=os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}_decision_boundary.png")
+    )

@@ -5,3 +5,4 @@ env/
 *.gif
 __pycache__/
 *.pyc
+output/

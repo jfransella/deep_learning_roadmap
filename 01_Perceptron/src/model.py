@@ -65,6 +65,8 @@ class Perceptron:
         self.weights_history = []
 
         print(f"[Perceptron] Starting training for {self.n_iter} epochs...")
+        total_start_time = time.perf_counter()
+
         for epoch in range(self.n_iter):
             start_time = time.perf_counter()
             errors = 0
@@ -79,7 +81,14 @@ class Perceptron:
             self.weights_history.append((self.weights.copy(), self.bias))
             elapsed_ms = (time.perf_counter() - start_time) * 1000
             print(f"[Perceptron] Epoch {epoch + 1}/{self.n_iter}: {errors} misclassifications ({elapsed_ms:.1f} ms)")
-        print("[Perceptron] Training complete.\n")
+
+        total_elapsed_ms = (time.perf_counter() - total_start_time) * 1000
+        avg_time_per_epoch_ms = total_elapsed_ms / self.n_iter
+        print("\n[Perceptron] --- Training Summary ---")
+        print(f"[Perceptron] Total epochs run: {self.n_iter}")
+        print(f"[Perceptron] Total training time: {total_elapsed_ms / 1000:.2f} seconds")
+        print(f"[Perceptron] Average time per epoch: {avg_time_per_epoch_ms:.1f} ms")
+        print("[Perceptron] --------------------------\n")
         return self
 
     def _net_input(self, X: np.ndarray) -> np.ndarray:
