@@ -8,11 +8,11 @@
 
     ```bash
     # Create the virtual environment
-    python -m venv venv
+    python -m venv .venv
 
     # Activate it (the command differs by OS)
     # On Windows:
-    .\venv\Scripts\activate
+    .\.venv\Scripts\activate
     ```
 
 2.  **Install Dependencies**
@@ -38,7 +38,7 @@
     python src/train_circles.py
     ```
 
-## Projecd .ct Structure
+## Project Structure
 
 *   `src/model.py`: Contains the `Perceptron` class implementation from scratch using NumPy.
 *   `src/data_loader.py`: A generalized function to fetch and prepare binary MNIST datasets.

@@ -10,11 +10,11 @@ Each experiment is a self-contained script. To run an experiment, simply execute
 
     ```bash
     # Create the virtual environment
-    python -m venv venv
+    python -m venv .venv
 
     # Activate it (the command differs by OS)
     # On Windows:
-    .\venv\Scripts\activate
+    .\.venv\Scripts\activate
     ```
 
 2.  **Install Dependencies**
