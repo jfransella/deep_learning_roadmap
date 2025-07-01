@@ -38,7 +38,7 @@
     python src/train_circles.py
     ```
 
-## Project Structure
+## Projecd .ct Structure
 
 *   `src/model.py`: Contains the `Perceptron` class implementation from scratch using NumPy.
 *   `src/data_loader.py`: A generalized function to fetch and prepare binary MNIST datasets.

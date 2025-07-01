@@ -6,8 +6,10 @@ Part of a project to explore the history and advances in neural network AI.
 """
 
 import os
+import logging
 from sklearn.datasets import make_circles
 from src.experiment_runner import run_experiment
+from src.logger_setup import setup_logging
 from src.visualize import (
     animate_scatter_reveal,
     plot_decision_boundary,
@@ -25,6 +27,10 @@ if __name__ == "__main__":
     EXPERIMENT_PREFIX = "circles"
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+    # Setup logging
+    log_file = os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}.log")
+    setup_logging(log_file)
+
     # 1. Run the experiment
     perceptron, X_train, y_train, X_test, y_test, predictions = run_experiment(
         data_loader_func=load_circles_data,
@@ -36,7 +42,7 @@ if __name__ == "__main__":
     )
 
     # 2. Visualize the results
-    print("\n[Main] Generating visualizations for the 'Circles' experiment...")
+    logging.info("Generating visualizations for the 'Circles' experiment...")
 
     # Input data visualization
     animate_scatter_reveal(

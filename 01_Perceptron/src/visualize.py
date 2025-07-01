@@ -5,6 +5,7 @@ Visualization utilities for perceptron training and evaluation.
 Part of a project to explore the history and advances in neural network AI.
 """
 
+import logging
 from typing import List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,7 +36,7 @@ def plot_decision_boundary(
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating decision boundary plot...")
+    logging.info("Generating decision boundary plot...")
     fig = plt.figure()
     plt.title(title)
     plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.get_cmap('viridis'), marker='o', edgecolors='k')
@@ -55,10 +56,10 @@ def plot_decision_boundary(
     plt.legend(loc="lower right")
     plt.grid(True)
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Decision boundary plot complete.")
+    logging.info("Decision boundary plot complete.")
 
 def plot_learned_weights(model: 'Perceptron', output_filename: Optional[str] = None) -> None:
     """
@@ -72,7 +73,7 @@ def plot_learned_weights(model: 'Perceptron', output_filename: Optional[str] = N
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating learned weights plot...")
+    logging.info("Generating learned weights plot...")
     image_size = int(np.sqrt(model.weights.shape[0]))
     weights_image = model.weights.reshape(image_size, image_size)
     plt.figure()
@@ -80,10 +81,10 @@ def plot_learned_weights(model: 'Perceptron', output_filename: Optional[str] = N
     plt.title("Perceptron's Learned Weights")
     plt.colorbar(label="Weight Strength")
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Learned weights plot complete.")
+    logging.info("Learned weights plot complete.")
 
 def plot_misclassified_examples(
     X_test: np.ndarray,
@@ -112,14 +113,14 @@ def plot_misclassified_examples(
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating misclassified examples plot...")
+    logging.info("Generating misclassified examples plot...")
     misclassified_mask = (predictions != y_test)
     X_misclassified = X_test[misclassified_mask]
     y_misclassified_true = y_test[misclassified_mask]
     y_misclassified_pred = predictions[misclassified_mask]
     num_to_show = min(n, len(X_misclassified))
     if num_to_show == 0:
-        print("No misclassified examples to show. Perfect accuracy!")
+        logging.info("No misclassified examples to show. Perfect accuracy!")
         return
     sample_indices = np.random.choice(len(X_misclassified), num_to_show, replace=False)
     fig, axes = plt.subplots(1, num_to_show, figsize=(15, 5))
@@ -144,10 +145,10 @@ def plot_misclassified_examples(
         ax.set_title(f"True: {true_label_str}\nPred: {pred_label_str}")
         ax.axis('off')
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Misclassified examples plot complete.")
+    logging.info("Misclassified examples plot complete.")
 
 def plot_learning_curve(model: 'Perceptron', output_filename: Optional[str] = None) -> None:
     """
@@ -160,7 +161,7 @@ def plot_learning_curve(model: 'Perceptron', output_filename: Optional[str] = No
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating learning curve plot...")
+    logging.info("Generating learning curve plot...")
     plt.figure()
     plt.plot(range(1, len(model.errors_history) + 1), model.errors_history, marker='o')
     plt.title('Perceptron Learning Curve')
@@ -168,10 +169,10 @@ def plot_learning_curve(model: 'Perceptron', output_filename: Optional[str] = No
     plt.ylabel('Number of Misclassifications on Training Data')
     plt.grid(True)
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Learning curve plot complete.")
+    logging.info("Learning curve plot complete.")
 
 def plot_confusion_matrix(
     y_true: np.ndarray,
@@ -193,7 +194,7 @@ def plot_confusion_matrix(
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating confusion matrix plot...")
+    logging.info("Generating confusion matrix plot...")
     ConfusionMatrixDisplay.from_predictions(
         y_true,
         y_pred,
@@ -203,10 +204,10 @@ def plot_confusion_matrix(
     )
     plt.title('Confusion Matrix')
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Confusion matrix plot complete.")
+    logging.info("Confusion matrix plot complete.")
 
 def animate_learned_weights(
     model: 'Perceptron',
@@ -222,7 +223,7 @@ def animate_learned_weights(
     output_filename : str, optional
         Output GIF filename (default: 'perceptron_weights.gif').
     """
-    print(f"\n[Visualize] Creating learned weights animation ('{output_filename}')...")
+    logging.info(f"Creating learned weights animation ('{output_filename}')...")
     fig, ax = plt.subplots()
     plt.title("Evolution of Learned Weights")
     plt.xlabel("Pixel Column")
@@ -238,7 +239,7 @@ def animate_learned_weights(
         return im,
     anim = animation.FuncAnimation(fig, update, frames=len(model.weights_history), interval=200, blit=True)
     anim.save(output_filename, writer='pillow')
-    print(f"[Visualize] Animation saved to '{output_filename}'.")
+    logging.info(f"Animation saved to '{output_filename}'.")
     plt.close()
 
 def animate_dataset_samples(
@@ -261,7 +262,7 @@ def animate_dataset_samples(
     output_filename : str, optional
         Output GIF filename (default: 'dataset_sample.gif').
     """
-    print(f"\n[Visualize] Creating dataset sample animation ('{output_filename}')...")
+    logging.info(f"Creating dataset sample animation ('{output_filename}')...")
     sample_indices = np.random.choice(len(X), n_samples, replace=False)
     fig, ax = plt.subplots()
     plt.xlabel("Pixel Column")
@@ -278,7 +279,7 @@ def animate_dataset_samples(
         return im,
     anim = animation.FuncAnimation(fig, update, frames=n_samples, interval=300, blit=True)
     anim.save(output_filename, writer='pillow')
-    print(f"[Visualize] Animation saved to '{output_filename}'.")
+    logging.info(f"Animation saved to '{output_filename}'.")
     plt.close()
 
 def animate_scatter_reveal(
@@ -301,7 +302,7 @@ def animate_scatter_reveal(
     output_filename : str, optional
         Output GIF filename (default: 'scatter_reveal.gif').
     """
-    print(f"\n[Visualize] Creating scatter reveal animation ('{output_filename}')...")
+    logging.info(f"Creating scatter reveal animation ('{output_filename}')...")
     fig, ax = plt.subplots()
     x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
     y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
@@ -320,5 +321,5 @@ def animate_scatter_reveal(
         ax.scatter(current_X[:, 0], current_X[:, 1], c=current_y, cmap='viridis', edgecolors='k')
     anim = animation.FuncAnimation(fig, update, frames=n_frames, interval=50)
     anim.save(output_filename, writer='pillow')
-    print(f"[Visualize] Animation saved to '{output_filename}'.")
+    logging.info(f"Animation saved to '{output_filename}'.")
     plt.close()

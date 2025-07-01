@@ -7,6 +7,7 @@ Part of a project to explore the history and advances in neural network AI.
 
 import numpy as np
 import time
+import logging
 from typing import Optional, List, Tuple
 
 class MLP:
@@ -128,18 +129,18 @@ class MLP:
 
         y_onehot = self._one_hot(y, self.n_output)
 
-        print(f"[MLP] Starting training for {self.n_iter} epochs...")
+        logging.info(f"Starting training for {self.n_iter} epochs...")
         total_start_time = time.perf_counter()
 
         for epoch in range(self.n_iter):
             epoch_start_time = time.perf_counter()
-            print(f"\n[MLP] --- Starting Epoch {epoch + 1}/{self.n_iter} ---")
+            logging.info(f"--- Starting Epoch {epoch + 1}/{self.n_iter} ---")
             
             if self.shuffle:
                 indices = np.arange(n_samples)
                 self.random_gen.shuffle(indices)
                 X, y_onehot = X[indices], y_onehot[indices]
-                print(f"    [Epoch {epoch + 1}] Shuffled training data.")
+                logging.info(f"Epoch {epoch + 1}: Shuffled training data.")
 
             epoch_cost = []
             # Set up interval for logging progress within an epoch
@@ -174,24 +175,24 @@ class MLP:
                 # --- Periodic Logging ---
                 # Log progress every 10% of the way through the epoch
                 if log_interval > 0 and (i + 1) % log_interval == 0 and (i + 1) < n_samples:
-                    print(f"    [Epoch {epoch + 1}] Processed {i + 1}/{n_samples} samples...")
+                    logging.info(f"Epoch {epoch + 1}: Processed {i + 1}/{n_samples} samples...")
 
             avg_cost = np.mean(epoch_cost)
             self.cost_history.append(avg_cost)
             
             elapsed_ms = (time.perf_counter() - epoch_start_time) * 1000
-            print(f"    [Epoch {epoch + 1}] Completed. Cost = {avg_cost:.6f} ({elapsed_ms:.1f} ms)")
+            logging.info(f"Epoch {epoch + 1}: Completed. Cost = {avg_cost:.6f} ({elapsed_ms:.1f} ms)")
             
             # Store weights for this epoch
             self.weights_history.append((self.w1.copy(), self.b1.copy(), self.w2.copy(), self.b2.copy()))
 
         total_elapsed_ms = (time.perf_counter() - total_start_time) * 1000
         avg_time_per_epoch_ms = total_elapsed_ms / self.n_iter
-        print("\n[MLP] --- Training Summary ---")
-        print(f"[MLP] Total epochs run: {self.n_iter}")
-        print(f"[MLP] Total training time: {total_elapsed_ms / 1000:.2f} seconds")
-        print(f"[MLP] Average time per epoch: {avg_time_per_epoch_ms:.1f} ms")
-        print("[MLP] --------------------------\n")
+        logging.info("--- Training Summary ---")
+        logging.info(f"Total epochs run: {self.n_iter}")
+        logging.info(f"Total training time: {total_elapsed_ms / 1000:.2f} seconds")
+        logging.info(f"Average time per epoch: {avg_time_per_epoch_ms:.1f} ms")
+        logging.info("--------------------------")
         return self
 
     def predict(self, X: np.ndarray) -> np.ndarray:

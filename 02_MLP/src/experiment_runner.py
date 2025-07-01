@@ -7,6 +7,7 @@ This helps to reduce code duplication across different training scripts.
 
 from typing import Callable, Tuple, Dict, Any
 import numpy as np
+import logging
 from sklearn.model_selection import train_test_split
 from src.model import MLP
 
@@ -46,23 +47,23 @@ def run_mlp_experiment(
         - predictions: The model's predictions on the test data.
     """
     # 1. Load Data & Split
-    print(f"[Runner] Initializing experiment: '{experiment_name}'")
+    logging.info(f"Initializing experiment: '{experiment_name}'")
     X, y = data_loader_func()
     stratify_data = y if stratify else None
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=random_state, stratify=stratify_data
     )
-    print(f"[Runner] Training on {len(X_train)} samples, testing on {len(X_test)} samples.")
+    logging.info(f"Training on {len(X_train)} samples, testing on {len(X_test)} samples.")
 
     # 2. Train Model
-    print(f"\n[Runner] Training MLP...")
+    logging.info("Training MLP...")
     mlp = MLP(**mlp_params)
     mlp.fit(X_train, y_train)
 
     # 3. Evaluate Model
-    print("\n[Runner] Evaluating the model...")
+    logging.info("Evaluating the model...")
     predictions = mlp.predict(X_test)
     accuracy = np.mean(predictions == y_test)
-    print(f"\n[Runner] --> Accuracy on the '{experiment_name}' test set: {accuracy * 100:.2f}%")
+    logging.info(f"--> Accuracy on the '{experiment_name}' test set: {accuracy * 100:.2f}%")
 
     return mlp, X_train, y_train, X_test, y_test, predictions

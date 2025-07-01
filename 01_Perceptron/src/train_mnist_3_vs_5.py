@@ -7,8 +7,10 @@ Part of a project to explore the history and advances in neural network AI.
 """
 
 import os
+import logging
 from src.data_loader import load_mnist_binary
 from src.experiment_runner import run_experiment
+from src.logger_setup import setup_logging
 from src.visualize import (
     animate_dataset_samples,
     animate_learned_weights,
@@ -24,6 +26,10 @@ if __name__ == "__main__":
     EXPERIMENT_PREFIX = "mnist_3_vs_5"
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+    # Setup logging
+    log_file = os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}.log")
+    setup_logging(log_file)
+
     # 1. Run the experiment
     perceptron, X_train, y_train, X_test, y_test, predictions = run_experiment(
         data_loader_func=lambda: load_mnist_binary(3, 5),
@@ -33,7 +39,7 @@ if __name__ == "__main__":
     )
 
     # 2. Visualize the results
-    print("\n[Main] Generating visualizations for the 'MNIST 3 vs 5' experiment...")
+    logging.info("Generating visualizations for the 'MNIST 3 vs 5' experiment...")
 
     # Input data visualization
     animate_dataset_samples(
@@ -64,4 +70,4 @@ if __name__ == "__main__":
         output_filename=os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}_weights_evolution.gif")
     )
        
-    print("\n[Main] --- MNIST 3 vs 5 Experiment Complete ---")
+    logging.info("--- MNIST 3 vs 5 Experiment Complete ---")

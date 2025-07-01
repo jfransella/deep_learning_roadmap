@@ -7,6 +7,7 @@ Part of a project to explore the history and advances in neural network AI.
 
 from sklearn.datasets import fetch_openml
 import numpy as np
+import logging
 from typing import Tuple
 
 def load_mnist_binary(digit1: int, digit2: int) -> Tuple[np.ndarray, np.ndarray]:
@@ -28,7 +29,7 @@ def load_mnist_binary(digit1: int, digit2: int) -> Tuple[np.ndarray, np.ndarray]
     y : np.ndarray
         Labels (0 for digit1, 1 for digit2).
     """
-    print(f"[DataLoader] Fetching MNIST data for '{digit1}' vs '{digit2}' task... This may take a moment.")
+    logging.info(f"Fetching MNIST data for '{digit1}' vs '{digit2}' task... This may take a moment.")
     mnist = fetch_openml('mnist_784', version=1, as_frame=False, parser='auto')
 
     str_digit1, str_digit2 = str(digit1), str(digit2)
@@ -39,5 +40,5 @@ def load_mnist_binary(digit1: int, digit2: int) -> Tuple[np.ndarray, np.ndarray]
 
     X = X / 255.0  # Normalize pixel values to [0, 1]
     y = np.where(y == str_digit1, 0, 1)  # Map digit1 to 0, digit2 to 1
-    print("[DataLoader] Data loaded and prepared successfully.")
+    logging.info("Data loaded and prepared successfully.")
     return X, y

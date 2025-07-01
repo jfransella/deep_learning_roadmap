@@ -7,6 +7,7 @@ This helps to reduce code duplication across different training scripts.
 
 from typing import Callable, Tuple
 import numpy as np
+import logging
 from sklearn.model_selection import train_test_split
 from src.model import Perceptron
 
@@ -46,24 +47,24 @@ def run_experiment(
         - predictions: The model's predictions on the test data.
     """
     # 1. Load Data & Split
-    print(f"[Runner] Initializing experiment: '{experiment_name}'")
+    logging.info(f"Initializing experiment: '{experiment_name}'")
     X, y = data_loader_func()
     stratify_data = y if stratify else None
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=42, stratify=stratify_data
     )
-    print(f"[Runner] Training on {len(X_train)} samples, testing on {len(X_test)} samples.")
+    logging.info(f"Training on {len(X_train)} samples, testing on {len(X_test)} samples.")
 
     # 2. Train Model
-    print(f"\n[Runner] Training Perceptron...")
+    logging.info(f"\nTraining Perceptron...")
     perceptron = Perceptron(learning_rate=learning_rate, n_iter=n_iter)
     perceptron.fit(X_train, y_train)
-    print("[Runner] Model training complete.")
+    logging.info("Model training complete.")
 
     # 3. Evaluate Model
-    print("\n[Runner] Evaluating the model...")
+    logging.info("\nEvaluating the model...")
     predictions = perceptron.predict(X_test)
     accuracy = np.mean(predictions == y_test)
-    print(f"[Runner] --> Accuracy on the '{experiment_name}' test set: {accuracy * 100:.2f}%")
+    logging.info(f"--> Accuracy on the '{experiment_name}' test set: {accuracy * 100:.2f}%")
 
     return perceptron, X_train, y_train, X_test, y_test, predictions

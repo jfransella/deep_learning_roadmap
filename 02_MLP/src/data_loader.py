@@ -7,6 +7,7 @@ Part of a project to explore the history and advances in neural network AI.
 
 from sklearn.datasets import fetch_openml, make_circles
 import numpy as np
+import logging
 from typing import Tuple
 
 def load_mnist_full() -> Tuple[np.ndarray, np.ndarray]:
@@ -20,7 +21,7 @@ def load_mnist_full() -> Tuple[np.ndarray, np.ndarray]:
     y : np.ndarray
         Integer labels (0-9).
     """
-    print("[DataLoader] Fetching full MNIST data... This may take a moment.")
+    logging.info("Fetching full MNIST data... This may take a moment.")
     mnist = fetch_openml('mnist_784', version=1, as_frame=False, parser='auto')
 
     X = mnist.data
@@ -28,7 +29,7 @@ def load_mnist_full() -> Tuple[np.ndarray, np.ndarray]:
 
     X = X / 255.0  # Normalize pixel values to [0, 1]
 
-    print("[DataLoader] Full MNIST data loaded and prepared successfully.")
+    logging.info("Full MNIST data loaded and prepared successfully.")
     return X, y
 
 def load_circles() -> Tuple[np.ndarray, np.ndarray]:
@@ -44,7 +45,7 @@ def load_circles() -> Tuple[np.ndarray, np.ndarray]:
     y : np.ndarray
         Binary labels (0 or 1).
     """
-    print("[DataLoader] Generating concentric circles dataset...")
+    logging.info("Generating concentric circles dataset...")
     X, y = make_circles(n_samples=500, noise=0.1, factor=0.5, random_state=1)
-    print("[DataLoader] Circles data generated successfully.")
+    logging.info("Circles data generated successfully.")
     return X, y

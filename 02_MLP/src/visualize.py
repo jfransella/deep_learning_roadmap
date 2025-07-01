@@ -5,6 +5,7 @@ Visualization utilities for Multi-Layer Perceptron (MLP) training and evaluation
 Part of a project to explore the history and advances in neural network AI.
 """
 
+import logging
 from typing import List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
@@ -38,7 +39,7 @@ def plot_decision_boundary(
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating decision boundary plot...")
+    logging.info("Generating decision boundary plot...")
     colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
     cmap = ListedColormap(colors[:len(np.unique(y))])
 
@@ -69,10 +70,10 @@ def plot_decision_boundary(
     plt.grid(True)
 
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Decision boundary plot complete.")
+    logging.info("Decision boundary plot complete.")
 
 def plot_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Optional[str] = None) -> None:
     """
@@ -87,7 +88,7 @@ def plot_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Option
     output_filename : str, optional
         If provided, saves the plot to this file.
     """
-    print("\n[Visualize] Generating learned weights plot for hidden layer...")
+    logging.info("Generating learned weights plot for hidden layer...")
     n_hidden = model.n_hidden
     n_rows = int(np.ceil(n_hidden / n_cols))
     fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 1.5, n_rows * 1.5))
@@ -108,10 +109,10 @@ def plot_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Option
         axes[i].axis('off')
 
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Learned weights plot complete.")
+    logging.info("Learned weights plot complete.")
 
 def plot_misclassified_examples(
     X_test: np.ndarray,
@@ -124,14 +125,14 @@ def plot_misclassified_examples(
     """
     Plot a sample of misclassified images.
     """
-    print("\n[Visualize] Generating misclassified examples plot...")
+    logging.info("Generating misclassified examples plot...")
     misclassified_mask = (predictions != y_test)
     X_misclassified = X_test[misclassified_mask]
     y_misclassified_true = y_test[misclassified_mask]
     y_misclassified_pred = predictions[misclassified_mask]
     num_to_show = min(n, len(X_misclassified))
     if num_to_show == 0:
-        print("[Visualize] No misclassified examples to show. Perfect accuracy!")
+        logging.info("No misclassified examples to show. Perfect accuracy!")
         return
 
     sample_indices = np.random.choice(len(X_misclassified), num_to_show, replace=False)
@@ -151,16 +152,16 @@ def plot_misclassified_examples(
         ax.axis('off')
 
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Misclassified examples plot complete.")
+    logging.info("Misclassified examples plot complete.")
 
 def plot_learning_curve(model: 'MLP', output_filename: Optional[str] = None) -> None:
     """
     Plot the cost per epoch (learning curve).
     """
-    print("\n[Visualize] Generating learning curve (cost) plot...")
+    logging.info("Generating learning curve (cost) plot...")
     plt.figure()
     plt.plot(range(1, len(model.cost_history) + 1), model.cost_history, marker='o')
     plt.title('MLP Learning Curve')
@@ -168,10 +169,10 @@ def plot_learning_curve(model: 'MLP', output_filename: Optional[str] = None) -> 
     plt.ylabel('Average Cost')
     plt.grid(True)
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Learning curve plot complete.")
+    logging.info("Learning curve plot complete.")
 
 def plot_confusion_matrix(
     y_true: np.ndarray,
@@ -182,7 +183,7 @@ def plot_confusion_matrix(
     """
     Plot a confusion matrix using the true labels and model predictions.
     """
-    print("\n[Visualize] Generating confusion matrix plot...")
+    logging.info("Generating confusion matrix plot...")
     ConfusionMatrixDisplay.from_predictions(
         y_true,
         y_pred,
@@ -192,10 +193,10 @@ def plot_confusion_matrix(
     )
     plt.title('Confusion Matrix')
     if output_filename:
-        print(f"[Visualize] Saving plot to '{output_filename}'...")
+        logging.info(f"Saving plot to '{output_filename}'...")
         plt.savefig(output_filename)
     plt.show()
-    print("[Visualize] Confusion matrix plot complete.")
+    logging.info("Confusion matrix plot complete.")
 
 def animate_dataset_samples(
     X: np.ndarray,
@@ -217,7 +218,7 @@ def animate_dataset_samples(
     output_filename : str, optional
         Output GIF filename (default: 'dataset_sample.gif').
     """
-    print(f"\n[Visualize] Creating dataset sample animation ('{output_filename}')...")
+    logging.info(f"Creating dataset sample animation ('{output_filename}')...")
     sample_indices = np.random.choice(len(X), n_samples, replace=False)
     fig, ax = plt.subplots()
     plt.xlabel("Pixel Column")
@@ -236,7 +237,7 @@ def animate_dataset_samples(
 
     anim = animation.FuncAnimation(fig, update, frames=n_samples, interval=300, blit=True)
     anim.save(output_filename, writer='pillow')
-    print(f"[Visualize] Animation saved to '{output_filename}'.")
+    logging.info(f"Animation saved to '{output_filename}'.")
     plt.close()
 
 def animate_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Optional[str] = None) -> None:
@@ -252,9 +253,9 @@ def animate_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Opt
     output_filename : str, optional
         If provided, saves the animation to this file.
     """
-    print(f"\n[Visualize] Creating learned weights animation ('{output_filename}')...")
+    logging.info(f"Creating learned weights animation ('{output_filename}')...")
     if not hasattr(model, 'weights_history') or not model.weights_history:
-        print("[Visualize] 'weights_history' not found in model. Skipping animation.")
+        logging.warning("'weights_history' not found in model. Skipping animation.")
         return
 
     n_hidden = model.n_hidden
@@ -267,7 +268,7 @@ def animate_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Opt
         if image_size * image_size != model.w1.shape[0]:
             raise ValueError
     except (ValueError, AttributeError):
-        print("[Visualize] Weights cannot be reshaped into square images. Skipping animation.")
+        logging.warning("Weights cannot be reshaped into square images. Skipping animation.")
         plt.close(fig)
         return
 
@@ -293,7 +294,7 @@ def animate_learned_weights(model: 'MLP', n_cols: int = 10, output_filename: Opt
     anim = animation.FuncAnimation(fig, update, frames=len(model.weights_history), interval=200, blit=False)
     if output_filename:
         anim.save(output_filename, writer='pillow')
-        print(f"[Visualize] Animation saved to '{output_filename}'.")
+        logging.info(f"Animation saved to '{output_filename}'.")
     plt.close(fig)
 
 def visualize_shifted_test(
@@ -326,7 +327,7 @@ def visualize_shifted_test(
     output_filename_base : str, optional
         The base filename for saving the output plots.
     """
-    print("\n[Visualize] Generating visualization for the shifted dataset test...")
+    logging.info("Generating visualization for the shifted dataset test...")
     image_size = int(np.sqrt(X_test_original.shape[1]))
 
     # --- Part 1: Show Misclassified Shifted Examples ---
@@ -353,11 +354,11 @@ def visualize_shifted_test(
 
         if output_filename_base:
             filename = output_filename_base.replace('.png', '_misclassified_shifted.png')
-            print(f"[Visualize] Saving misclassified plot to '{filename}'...")
+            logging.info(f"Saving misclassified plot to '{filename}'...")
             plt.savefig(filename)
         plt.show()
     else:
-        print("[Visualize] No misclassified examples in the shifted set to show.")
+        logging.info("No misclassified examples in the shifted set to show.")
 
-    print("[Visualize] Shifted dataset visualization complete.")
+    logging.info("Shifted dataset visualization complete.")
     plt.close(fig)

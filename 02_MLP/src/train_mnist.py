@@ -6,10 +6,12 @@ Part of a project to explore the history and advances in neural network AI.
 """
 
 import os
+import logging
 import numpy as np
 from scipy.ndimage import shift
 from src.data_loader import load_mnist_full
 from src.experiment_runner import run_mlp_experiment
+from src.logger_setup import setup_logging
 from src.visualize import (
     plot_learning_curve,
     plot_confusion_matrix,
@@ -25,7 +27,7 @@ def create_shifted_dataset(X: np.ndarray, shift_pixels: int = 2) -> np.ndarray:
     Creates a new dataset by shifting each image by a few pixels.
     This is used to test the model's spatial invariance.
     """
-    print(f"\n[Main] Creating a new test set by shifting images by {shift_pixels} pixels...")
+    logging.info(f"Creating a new test set by shifting images by {shift_pixels} pixels...")
     X_shifted = np.zeros_like(X)
     image_size = int(np.sqrt(X.shape[1]))
     for i in range(len(X)):
@@ -39,6 +41,10 @@ if __name__ == "__main__":
     OUTPUT_DIR = "output"
     EXPERIMENT_PREFIX = "mlp_mnist_full"
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    # Setup logging
+    log_file = os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}.log")
+    setup_logging(log_file)
 
     # --- 2. Define Experiment Parameters ---
     mlp_params = {
@@ -58,7 +64,7 @@ if __name__ == "__main__":
     )
 
     # --- 4. Visualize the Results ---
-    print("\n[Main] Generating visualizations for the full MNIST experiment...")
+    logging.info("Generating visualizations for the full MNIST experiment...")
     digit_labels = [str(i) for i in range(10)]
 
     # Input data visualization
@@ -91,11 +97,11 @@ if __name__ == "__main__":
 
     # --- 5. Negative Test: Evaluate on Shifted Images ---
     X_test_shifted = create_shifted_dataset(X_test, shift_pixels=4)
-    print("\n[Main] Evaluating model on the SHIFTED test set...")
+    logging.info("Evaluating model on the SHIFTED test set...")
     shifted_predictions = mlp.predict(X_test_shifted)
     shifted_accuracy = np.mean(shifted_predictions == y_test)
-    print(f"\n[Main] --> Accuracy on SHIFTED test set: {shifted_accuracy * 100:.2f}%")
-    print("[Main] This demonstrates the MLP's lack of spatial invariance, a key problem solved by CNNs like LeNet-5.")
+    logging.info(f"--> Accuracy on SHIFTED test set: {shifted_accuracy * 100:.2f}%")
+    logging.info("This demonstrates the MLP's lack of spatial invariance, a key problem solved by CNNs like LeNet-5.")
 
     # Visualize why the accuracy dropped
     visualize_shifted_test(
@@ -103,4 +109,4 @@ if __name__ == "__main__":
         output_filename_base=os.path.join(OUTPUT_DIR, f"{EXPERIMENT_PREFIX}_shifted_test.png")
     )
 
-    print("\n[Main] --- Full MNIST Experiment Complete ---")
+    logging.info("--- Full MNIST Experiment Complete ---")
