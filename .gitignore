@@ -1,0 +1,7 @@
+# Ignore python virtual environments
+.venv/
+venv/
+env/
+*.gif
+__pycache__/
+*.pyc
